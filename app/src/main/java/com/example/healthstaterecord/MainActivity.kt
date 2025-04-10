@@ -1,39 +1,46 @@
+package com.example.healthstaterecord
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.compose.*
+import com.example.healthstaterecord.ui.theme.HealthStateRecordTheme
 import java.time.LocalDate
-import com.example.healthstaterecord.CalendarScreen
-import com.example.healthstaterecord.DetailScreen
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApp()
-        }
-    }
-}
+            HealthStateRecordTheme {
+                // Set up the NavController for navigation
+                val navController = rememberNavController()
 
-@Composable
-fun MyApp() {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = "calendar") {
-        composable("calendar") {
-            CalendarScreen(onDayClick = { date ->
-                // LocalDateはStringで渡す
-                navController.navigate("detail/${date.toString()}")
-            })
-        }
-        composable("detail/{date}") { backStackEntry ->
-            val dateStr = backStackEntry.arguments?.getString("date")
-            val date = LocalDate.parse(dateStr)
-            DetailScreen(date = date, onBack = { navController.popBackStack() })
+                // Define the NavHost with routes for the screens
+                NavHost(navController, startDestination = "calendar") {
+                    composable("calendar") {
+                        // Calendar screen where days are displayed
+                        CalendarScreen(
+                            onDayClick = { date ->
+                                // Navigate to DetailScreen with the selected date
+                                navController.navigate("detail/$date")
+                            }
+                        )
+                    }
+                    composable("detail/{date}") { backStackEntry ->
+                        val date = LocalDate.parse(backStackEntry.arguments?.getString("date"))
+                        // Pass the selected date to the DetailScreen
+                        DetailScreen(date = date, onBack = {
+                            navController.popBackStack()
+                        })
+                    }
+                }
+            }
         }
     }
 }
