@@ -34,11 +34,10 @@ enum class MoodType(val emoji: String) {
 }
 
 @Composable
-fun CalendarScreen(onDayClick: (LocalDate) -> Unit) {
+fun CalendarScreen(onDayClick: (LocalDate) -> Unit, moodStates: List<MoodDay>) {
     val currentMonth = YearMonth.now()
     val daysInMonth = currentMonth.lengthOfMonth()
 
-    // 今月の日付リストを作成
     val days = remember {
         (1..daysInMonth).map { day ->
             MoodDay(LocalDate.of(currentMonth.year, currentMonth.month, day))
@@ -55,11 +54,12 @@ fun CalendarScreen(onDayClick: (LocalDate) -> Unit) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // カレンダーのグリッド
         LazyVerticalGrid(columns = GridCells.Fixed(7), modifier = Modifier.fillMaxSize()) {
             items(days.size) { index ->
                 val day = days[index]
-                MoodDayItem(day, onDayClick)
+                // MoodDayItem に気分情報を追加
+                val mood = moodStates.find { it.date == day.date }?.mood ?: MoodType.NEUTRAL
+                MoodDayItem(day.copy(mood = mood), onDayClick)
             }
         }
     }
@@ -80,8 +80,8 @@ fun MoodDayItem(day: MoodDay, onDayClick: (LocalDate) -> Unit) {
 }
 
 // プレビュー用
-@Preview(showBackground = true)
-@Composable
-fun CalendarScreenPreview() {
-    CalendarScreen(onDayClick = {})
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun CalendarScreenPreview() {
+//    CalendarScreen(onDayClick = {})
+//}

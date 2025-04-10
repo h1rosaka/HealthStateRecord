@@ -10,9 +10,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
 
-
+//
 @Composable
-fun DetailScreen(date: LocalDate, onBack: () -> Unit) {
+fun DetailScreen(date: LocalDate, onBack: () -> Unit, onMoodSelect: (MoodType) -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = date.toString(), fontSize = 24.sp)
         Spacer(modifier = Modifier.height(16.dp))
@@ -24,23 +24,24 @@ fun DetailScreen(date: LocalDate, onBack: () -> Unit) {
                     fontSize = 32.sp,
                     modifier = Modifier
                         .padding(4.dp)
-                        .clickable { /* TODO: 保存処理など */ }
+                        .clickable {
+                            onMoodSelect(mood)
+                        }
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "メモ")
-        OutlinedTextField(value = "", onValueChange = { /* TODO: 保存処理など */}, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = "", onValueChange = { /* TODO: メモ保存処理 */ }, modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onBack) {
             Text("戻る")
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun DetailScreenPreview() {
-    DetailScreen(date = LocalDate.now(), onBack = {})
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DetailScreenPreview() {
+//    DetailScreen(date = LocalDate.now(), onBack = {})
+//}
